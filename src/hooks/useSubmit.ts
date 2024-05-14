@@ -145,9 +145,36 @@ const useSubmit = () => {
         stream.cancel();
       }
 
+
       // update tokens used in chatting
       const currChats = useStore.getState().chats;
       const countTotalTokens = useStore.getState().countTotalTokens;
+
+      let response = currChats && currChats[currentChatIndex].messages[currChats[currentChatIndex].messages.length - 1]['content'];
+      let query = currChats && currChats[currentChatIndex].messages[currChats[currentChatIndex].messages.length - 2]['content'];
+
+      let data = {
+        'customer_id': 1,
+        'user_id': 1,
+        'query': query,
+        'response': response
+      };
+      let url = 'http://127.0.0.1:8000/push-data/';
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
 
       if (currChats && countTotalTokens) {
         const model = currChats[currentChatIndex].config.model;
@@ -158,6 +185,9 @@ const useSubmit = () => {
           messages[messages.length - 1]
         );
       }
+      currChats && console.log("messages", currChats[currentChatIndex])
+
+
 
       // generate title for new chats
       if (
