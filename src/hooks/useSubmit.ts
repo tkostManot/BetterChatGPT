@@ -185,8 +185,6 @@ const useSubmit = () => {
           messages[messages.length - 1]
         );
       }
-      currChats && console.log("messages", currChats[currentChatIndex])
-
 
 
       // generate title for new chats
